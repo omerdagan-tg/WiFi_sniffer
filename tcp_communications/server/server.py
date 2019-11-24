@@ -6,6 +6,8 @@ from tcp_communications import protocol
 IP = '0.0.0.0'  # IP for all available network interfaces in current machine
 PORT = 12345
 BUFFER = 1024
+global file_size
+global current_size
 
 
 def create_and_send_response(request_str, client_socket):
@@ -17,8 +19,19 @@ def create_and_send_response(request_str, client_socket):
     # get all letters as lower
     request_str = request_str.lower()
     if request_str:   # if request_str != "" and request_str != None. Socket get "" after disconnection
-        if request_str == "name":
-            response_str = "I am basic server 'Tomic'"
+        if request_str == "start":
+            response_str = "ack-start"
+        if request_str == "configure":
+            with open("configuration.ini", 'wb') as fw:
+
+                while True:
+                    data = client_socket.recv(1024)
+                    current_size = current_size + len(data)
+                    fw.write(data)
+                    if current_size >= file_size:
+                        print('end writing')
+                        break
+            client_socket.send("end recv".encode())
         elif request_str == "exit":
             response_str = "Bye!"
         else:
@@ -44,6 +57,8 @@ def conversation(client_socket, client_address):
             request = protocol.get_request(client_socket)
             print("client sent:", request)
             ack = create_and_send_response(request, client_socket)
+
+
     finally:
         client_socket.close()
     print("Client close the connection. Client ip  =", ip, ", client port =", port)
@@ -72,11 +87,13 @@ def main():
 
     try:
         while True:
-            # Connection point, server wait for client
-            client_socket, client_address = server_socket.accept()
-            # start conversation with new client in parallel thread
-            thread_for_client = threading.Thread(target=conversation, args=(client_socket, client_address))
-            thread_for_client.start()
+
+            client_socket, addr = server_socket.accept()  # Establish connection with client.
+            print('Got connection from', addr)
+            msg_size = client_socket.recv(1024).decode()
+            print("size of file=", msg_size)
+            file_size = int(msg_size)
+            current_size = 0
 
     finally:
         server_socket.close()

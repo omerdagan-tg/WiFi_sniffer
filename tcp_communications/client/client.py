@@ -1,6 +1,6 @@
 import socket
-import sys
-import protocol
+import os
+import tcp_communications.protocol as protocol
 
 HOST_IP = "127.0.0.1"
 PORT = 12345
@@ -12,12 +12,21 @@ def main():
     # Open client socket, Transport layer: protocol TCP, Network layer: protocol IP
     client_socket = socket.socket()
     client_socket.connect((HOST_IP, PORT))
+    ini_file_size = os.path.getsize("configuration.ini")
     try:
         while True:
 
             # Get request from keyboard
             client_request_str = input("Enter your command [Name]/.../[Exit]: ")
             if client_request_str:   # if client_request_str not empty string
+                if client_request_str == 'configure':
+                    client_socket.send("configure".encode())
+                    client_socket.send(str(ini_file_size).encode())
+                    with open('./configuration.ini', 'rb') as fs:
+                        data = fs.read(1024)
+                        while data:
+                            client_socket.send(data)
+                            data = fs.read(1024)
                 # send request according to the protocol
                 protocol.send_request(client_socket, client_request_str)
                 # Get response from server
