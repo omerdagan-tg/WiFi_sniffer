@@ -32,6 +32,10 @@ def create_and_send_response(request_str, client_socket):
                         print('end writing')
                         break
             client_socket.send("end recv".encode())
+        elif request_str == "pause":
+            response_str = "paused"
+        elif request_str == "stop":
+            response_str = "stopped"
         elif request_str == "exit":
             response_str = "Bye!"
         else:
@@ -65,6 +69,8 @@ def conversation(client_socket, client_address):
 
 
 def main():
+    global file_size
+    global current_size
     # Set up the server:
     # create an INET, STREAMing socket
     # (IP v4 protocol in Network(Internet) Layer and TCP protocol in Transport Layer)
