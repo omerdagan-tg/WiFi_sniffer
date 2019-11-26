@@ -1,6 +1,8 @@
 import socket
 import os
-import tcp_communications.protocol as protocol
+import time
+
+import tcp_communications.client.protocol as protocol
 
 HOST_IP = "127.0.0.1"
 PORT = 12345
@@ -20,6 +22,8 @@ def main():
             client_request_str = input("Enter your command [Name]/.../[Exit]: ")
             if client_request_str:   # if client_request_str not empty string
                 if client_request_str == 'configure':
+                    client_socket.send(str(len(client_request_str)).encode())
+                    time.sleep(1)
                     client_socket.send("configure".encode())
                     client_socket.send(str(ini_file_size).encode())
                     with open('./configuration.ini', 'rb') as fs:
@@ -38,6 +42,7 @@ def main():
                         print("Server crashes")
                     break
     finally:
+        print('client socket closed')
         client_socket.close()
 
 if __name__ == '__main__':
