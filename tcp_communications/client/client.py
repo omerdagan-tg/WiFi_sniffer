@@ -5,7 +5,8 @@ import tcp_communications.protocol as protocol
 HOST_IP = "127.0.0.1"
 PORT = 12345
 BUFFER = 1024
-
+def updateConfiguration():
+    pass
 
 def main():
     """implements the conversation with server"""
