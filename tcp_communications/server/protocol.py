@@ -8,6 +8,7 @@ def get_request(client_socket):
     len_request_str = client_socket.recv(MESSAGE_LEN)
     # decode by utf-8 standart, convert to string
     len_request_str = len_request_str.decode()
+    print(len_request_str)
     len_request = int(len_request_str)
     request = client_socket.recv(len_request)
     # remove white chars (TAB, ENTER)

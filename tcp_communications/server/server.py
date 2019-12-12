@@ -1,7 +1,7 @@
 # Basic server
 import socket
 import threading
-from tcp_communications import protocol
+from tcp_communications.server import protocol
 
 IP = '0.0.0.0'  # IP for all available network interfaces in current machine
 PORT = 12345
@@ -19,13 +19,20 @@ def create_and_send_response(request_str, client_socket):
     # get all letters as lower
     request_str = request_str.lower()
     if request_str:   # if request_str != "" and request_str != None. Socket get "" after disconnection
+        print(request_str)
         if request_str == "start":
             response_str = "ack-start"
         if request_str == "configure":
+
+            msg_size = client_socket.recv(1024).decode()
+            print("size of file=", msg_size)
+            file_size = int(msg_size)
+            current_size = 0
             with open("configuration.ini", 'wb') as fw:
 
                 while True:
                     data = client_socket.recv(1024)
+                    print('sent data')
                     current_size = current_size + len(data)
                     fw.write(data)
                     if current_size >= file_size:
@@ -96,12 +103,10 @@ def main():
 
             client_socket, addr = server_socket.accept()  # Establish connection with client.
             print('Got connection from', addr)
-            msg_size = client_socket.recv(1024).decode()
-            print("size of file=", msg_size)
-            file_size = int(msg_size)
-            current_size = 0
+            conversation(client_socket, addr)
 
     finally:
+        print('server socket closed')
         server_socket.close()
 
 
