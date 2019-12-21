@@ -81,7 +81,6 @@ def main():
     # Set up the server:
     # create an INET, STREAMing socket
     # (IP v4 protocol in Network(Internet) Layer and TCP protocol in Transport Layer)
-    # socket.AF_INET, socket.SOCK_STREAM are the default attributes for socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # When you create a socket, you don't really own it. The OS (TCP stack) creates it for you and gives you
