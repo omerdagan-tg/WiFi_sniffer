@@ -1,0 +1,13 @@
+This script is for json to pcap translation, written in 2.7 python.
+Due note that on line 126 a path to "text2pcap" (in wireshark's directory) needs to be provided.
+
+In order to try using the script I have exported sniffed packets as json and named it "test". 
+Then I have executed the script and gave the json file as an input. 
+Instead of generating a pcap file with all the packets I had initially sniffed, it generated an empty pcap file.
+
+I understood the tool "text2pcap" converts a hexdump, in a specific form, into a pcap file.
+To test it I have made two new files after a wireshark sniffing, a json and a hexdump (see examples).
+After executing "text2pcap" I had two pcap files. The first was created when given the json as input, and it was empty.
+The second was created when given the hexdump as input, and it contained all the packets.
+
+Because of that I think the script doesn't translate the json file to the correct form, and consequently the generated pcap is empty.
