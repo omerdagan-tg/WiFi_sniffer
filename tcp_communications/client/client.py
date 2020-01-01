@@ -7,10 +7,14 @@ import tcp_communications.client.protocol as protocol
 HOST_IP = "127.0.0.1"
 PORT = 12345
 BUFFER = 1024
+client_request_str = ""
+global client_request_str
+
 def updateConfiguration():
-    pass
+    client_request_str = 'configure'
 
 def main():
+    global client_request_str
     """implements the conversation with server"""
     # Open client socket, Transport layer: protocol TCP, Network layer: protocol IP
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,12 +23,9 @@ def main():
     try:
         while True:
 
-            # Get request from keyboard
-            client_request_str = input("Enter your command [Name]/.../[Exit]: ")
             if client_request_str:   # if client_request_str not empty string
                 if client_request_str == 'configure':
                     client_socket.send(str(len(client_request_str)).encode())
-                    time.sleep(1)
                     client_socket.send("configure".encode())
                     client_socket.send(str(ini_file_size).encode())
                     with open('./configuration.ini', 'rb') as fs:
