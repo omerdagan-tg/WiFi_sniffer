@@ -1,12 +1,4 @@
 import os
-import enum
-
-class ProtocolFilteringOptions(enum.Enum):
-    HTTP = 'HTTP'
-    TCP = 'TCP'
-    UDP = 'UDP'
-
-
 
 class WifiMonitoringProgram:
     WifiAdapterName = 'wlan0'       #temporary adapter name
