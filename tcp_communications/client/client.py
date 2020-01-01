@@ -13,7 +13,7 @@ def updateConfiguration():
 def main():
     """implements the conversation with server"""
     # Open client socket, Transport layer: protocol TCP, Network layer: protocol IP
-    client_socket = socket.socket()
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((HOST_IP, PORT))
     ini_file_size = os.path.getsize("configuration.ini")
     try:
