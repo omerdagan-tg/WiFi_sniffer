@@ -1,6 +1,8 @@
 import os
 import pyshark
 
+
+
 class RpiConfigurationParser:
     isStarted = False
     isEnded = False
@@ -15,6 +17,11 @@ class RpiConfigurationParser:
         self.packet_location = packet_location
 
     def filter(self):
+        # Erez:  Regarding globals in programming - Don't ever use them. (Unless in very very very few cases)
+        # Why? the function should not be aware from the outside world because than if changes occur outside of this functions it would break.
+        # Globals is super dangerous from many reasons so if only this function is using these variables so receive them as argument
+        # if the entire class is using them, then receive them in the class constructor
+        # If you want other modules to access them, you should add a function for example "getMacs" that returns a copy of all the MAC addresses you got.
         global packet_location
         global IP
         global protocols
@@ -38,6 +45,7 @@ class RpiConfigurationParser:
 
 
     def configure_filter(self):
+        # See my comment regarding globals aboce
         global ini_location
         global isStarted
         global isEnded
@@ -46,9 +54,13 @@ class RpiConfigurationParser:
         global MAC
         current_filter = ''
 
+        # Erez: You should noy parse ini files as text. Ini has standard rules and can be parsed using "configparser" library of Python.
+        # Using libraries is the best way to avoid mistakes and Python is full with it so always keep it in mind.
         file = open(ini_location + '\configure.ini', 'r')
         file_txt = file.readlines()
         for line in file_txt:
+            # Erez: All the keywords such as START, END, IP, MAC are a part of your protocol, and should be defined in a seperate file and pulled from there instead of written hard coded.
+            # for example instead of line == 'STRAT' I would like to see line == clientProtocol.start. This way you will be on the safe side that you spelled it right, and you'll be safe from changes.
             if line == 'START':
                 current_filter = 'START'
                 isStarted = True
