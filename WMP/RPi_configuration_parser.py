@@ -25,9 +25,9 @@ class RpiConfigurationParser:
                 if not filtered_cap:
                     os.remove(packet_location + filename)
                     
-             for protocol_filter in protocols:
-                filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=protocol_filter)
-                if not filtered_cap:
+            for protocol_filter in protocols:
+               filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=protocol_filter)
+               if not filtered_cap:
                     os.remove(packet_location + filename)
              
             for MAC_filter in MAC:
