@@ -20,7 +20,7 @@ port = 9999
 buf = 1024
 addr = (host, port)
 
-file_name = "out.json"  # The name will be the date and time of the captured packets
+file_addr = "out.json"  # The name will be the date and time of the captured packets
 
 
 f = open(file_name, "rb")
