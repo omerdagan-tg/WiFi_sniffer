@@ -10,8 +10,8 @@ class DataUtilization:
         self.current_size = 0
         self.data = []
 
-    def init(self):
-        self.cur_size = 0
+    def init(self):     # will be used to initialize after use
+        # self.cur_size = 0
         self.name = None
         self.size = -1
         self.current_size = 0
