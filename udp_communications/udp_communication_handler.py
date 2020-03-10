@@ -1,5 +1,6 @@
 from socket import *
 import json
+from udp_communication_handler import *
 
 
 class UDPCommunicationHandler:
@@ -16,7 +17,7 @@ class UDPCommunicationHandler:
     # This function will be used by the udp client on the RPi - NOT FIXED
 
     def send(self, file_name, size):  # The name will be the date and time of the captured packets
-        # we don't need address because we can store the file in a static place on the RPi
+        # we don't need to find the address because we can store the file in a static place on the RPi
 
         s = socket(AF_INET, SOCK_DGRAM)
 

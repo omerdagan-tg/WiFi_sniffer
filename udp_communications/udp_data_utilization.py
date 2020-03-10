@@ -1,5 +1,6 @@
 from socket import *
 import json
+from file_handler import FileHandler
 
 
 class DataUtilization:
@@ -20,11 +21,8 @@ class DataUtilization:
         self.isData = False
 
     def save_file(self):
-        with open(self.name, 'wb') as f:  # needs to get a path from the user.
-            for data in self.data:
-                f.write(data)
-        print("File Downloaded")
-        self.init()
+        file_handler = FileHandler(self.name, self.data)
+        file_handler.write()
 
     def get_data(self, data):
         if not self.isData:  # The first thing that will be sent is the name and size
@@ -55,5 +53,6 @@ class DataUtilization:
                 if self.current_size >= self.size:
                     # save to file
                     self.save_file()
+
             except ValueError as e:
                 print("need your check")
