@@ -1,3 +1,6 @@
+import os
+
+
 class FileHandler:
     def __init__(self, name, data=None):
         self.data = data
@@ -12,14 +15,15 @@ class FileHandler:
                 f.write(data)
         print("File Downloaded")
 
-    def read(self):
+    def read(self, buffer):
+        self.data = []
         with open(self.name, "rb") as f:
-            self.data = f.read()
+            cur_data = f.read(buffer)
+            while cur_data:
+                self.data.append(cur_data)
+                print("reading")
+                cur_data = f.read(buffer)
         return self.data
-
-
-
-
 
 
 
