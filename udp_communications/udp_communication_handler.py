@@ -23,7 +23,6 @@ class UDPCommunication:
 
         s = socket(AF_INET, SOCK_DGRAM)
         data = data_handler.send_data(self.buffer)
-        print(data)
         while(data):
             s.sendto(data, self.addr)
             print("sending")
