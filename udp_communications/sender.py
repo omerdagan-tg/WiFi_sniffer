@@ -7,6 +7,12 @@ import sys
 def get_input():  # Gets the json file through pipe
     pass
 
+# Erez: Please create a generic class that will be responsible for sending / listening to a socket
+# This class will receive as input the IP, port, and any parameter you have in mind.
+# To send data, the caller will open the file and send only the streaming data to this class.
+# To receive data the caller will call listen and awit until the data is received.
+# This way the class will only be responsible for socket handling, and will be immuned to any specific application changes.
+# You will use it both for receiver and for sender.
 
 s = socket(AF_INET, SOCK_DGRAM)
 host = "127.0.0.1"  # The host pc ip, currently localhost

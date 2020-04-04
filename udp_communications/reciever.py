@@ -8,6 +8,7 @@ import select
 def check_for_signal():  # Gets a signal to close the server
     pass
 
+# Erez: Please refer to my notes in "sender.py"
 
 host = "0.0.0.0"       # IP for all available network interfaces in current machine
 port = 9999

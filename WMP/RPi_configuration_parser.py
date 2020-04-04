@@ -1,5 +1,8 @@
 import os
 import pyshark
+import WMP.ini_protocol as ini_protocol
+
+
 
 class RpiConfigurationParser:
     isStarted = False
@@ -15,61 +18,78 @@ class RpiConfigurationParser:
         self.packet_location = packet_location
 
     def filter(self):
-        global packet_location
-        global IP
-        global protocols
-        global MAC
-        for filename in os.listdir(packet_location):
-            for ip_filter in IP:
-                filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=ip_filter)
+        for filename in os.listdir(self.packet_location):
+            for ip_filter in self.IP:
+                filtered_cap = pyshark.FileCapture(self.packet_location + filename, display_filter=ip_filter)
                 if not filtered_cap:
+
                     os.remove(packet_location + filename)
                     
             for protocol_filter in protocols:
                filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=protocol_filter)
                if not filtered_cap:
                     os.remove(packet_location + filename)
-             
-            for MAC_filter in MAC:
-                filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=MAC_filter)
+                    os.remove(self.packet_location + filename)
+
+            for protocol_filter in self.protocols:
+                filtered_cap = pyshark.FileCapture(self.packet_location + filename, display_filter=protocol_filter)
                 if not filtered_cap:
-                    os.remove(packet_location + filename)
+                    os.remove(self.packet_location + filename)
+             
+            for MAC_filter in self.MAC:
+                filtered_cap = pyshark.FileCapture(self.packet_location + filename, display_filter=MAC_filter)
+                if not filtered_cap:
+                    os.remove(self.packet_location + filename)
 
 
 
     def configure_filter(self):
-        global ini_location
-        global isStarted
-        global isEnded
-        global protocols
-        global IP
-        global MAC
         current_filter = ''
 
-        file = open(ini_location + '\configure.ini', 'r')
+        # Erez: You should noy parse ini files as text. Ini has standard rules and can be parsed using "configparser" library of Python.
+        # Using libraries is the best way to avoid mistakes and Python is full with it so always keep it in mind.
+        file = open(self.ini_location + '\configure.ini', 'r')
         file_txt = file.readlines()
         for line in file_txt:
-            if line == 'START':
-                current_filter = 'START'
-                isStarted = True
-            elif line == 'END':
-                current_filter = 'END'
-                isEnded = True
+            if line == ini_protocol.start:
+                current_filter = ini_protocol.start
+                self.isStarted = True
+            elif line == ini_protocol.end:
+                self.current_filter = ini_protocol.end
+                self.isEnded = True
                 break
-            elif line == 'PROTOCOLS' or current_filter == 'PROTOCOLS':
-                current_filter = 'PROTOCOLS'
-                if line != 'PROTOCOLS':
-                    protocols.append(line)
-            elif line == 'IP':
-                current_filter = 'IP'
-                if line != 'IP':
-                    IP.append(line)
-            elif line == 'MAC' or current_filter == 'MAC':
-                current_filter = 'MAC'
-                if line != 'MAC':
-                    MAC.append(line)
+            elif line == ini_protocol.protocols or current_filter == ini_protocol.protocol:
+                current_filter = ini_protocol.protocol
+                if line != ini_protocol.protocol:
+                    self.protocols.append(line)
+            elif line == ini_protocol.ip:
+                current_filter = ini_protocol.ip
+                if line != ini_protocol.ip:
+                    self.IP.append(line)
+            elif line == ini_protocol.mac or current_filter == ini_protocol.mac:
+                current_filter = ini_protocol.mac
+                if line != ini_protocol.mac:
+                    self.MAC.append(line)
 
 
+    def getMacs(self):
+        return self.MAC
 
+    def getProtocols(self):
+        return self.protocols
 
+    def getIP(self):
+        return self.IP
+
+    def getIniLocation(self):
+        return self.ini_location
+
+    def getPacketLocation(self):
+        return self.packet_location
+
+    def setIniLocation(self, ini_location):
+        self.ini_location = ini_location
+
+    def setPacketLocation(self, packet_location):
+        self.packet_location = packet_location
 
