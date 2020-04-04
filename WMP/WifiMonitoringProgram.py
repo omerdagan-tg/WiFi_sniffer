@@ -1,17 +1,24 @@
 import os
 
 class WifiMonitoringProgram:
-    WifiAdapterName = 'wlan0'       #temporary adapter name
-    global WifiAdapterName
+    WifiAdapterName = 'wlan0'       #default adapter name
 
     def __init__(self):
         pass        #init will read the ini file sent from the Host PC
 
-    def startMonitoring(self):
+    def startMonitorMode(self, WifiAdapterName):
+        self.WifiAdapterName = WifiAdapterName
         os.system('airmon-ng check kill')  # killing processes that stop the airmon-ng from changing adapter to monitor mode
-        os.system('airmon-ng start' + WifiAdapterName)  # changing the WiFi adapter to monitor mode
-        os.system('tshark -i' + WifiAdapterName + '-w capture-output.pcap')  # saving the packets that the adapter sniffed
+        os.system('airmon-ng start' + self.WifiAdapterName)  # changing the WiFi adapter to monitor mode
 
-    def stopMonitoring(self):
-        os.system('airmon-ng stop' + WifiAdapterName)       #changing the WiFi adapter to stationary mode
-        os.system('service network-manager start')      #restarting the processes that were killed when starting
+
+    def startMonitorMode(self):
+        os.system('airmon-ng check kill')  # killing processes that stop the airmon-ng from changing adapter to monitor mode
+        os.system('airmon-ng start' + self.WifiAdapterName)  # changing the WiFi adapter to monitor mode
+
+    def stopMonitorMode(self, WifiAdapterName):
+        self.WifiAdapterName = WifiAdapterName
+        os.system('airmon-ng stop' + self.WifiAdapterName)  # changing the WiFi adapter to stationary mode
+
+    def stopMonitorMode(self):
+        os.system('airmon-ng stop' + self.WifiAdapterName)  # changing the WiFi adapter to stationary mode

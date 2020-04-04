@@ -22,6 +22,13 @@ class RpiConfigurationParser:
             for ip_filter in self.IP:
                 filtered_cap = pyshark.FileCapture(self.packet_location + filename, display_filter=ip_filter)
                 if not filtered_cap:
+
+                    os.remove(packet_location + filename)
+                    
+            for protocol_filter in protocols:
+               filtered_cap = pyshark.FileCapture(packet_location + filename, display_filter=protocol_filter)
+               if not filtered_cap:
+                    os.remove(packet_location + filename)
                     os.remove(self.packet_location + filename)
 
             for protocol_filter in self.protocols:
