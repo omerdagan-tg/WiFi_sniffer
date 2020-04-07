@@ -1,7 +1,8 @@
 # Basic server
 import socket
 import threading
-from tcp_communications.server import protocol
+import tcp_communications.server.protocol as protocol
+from WMP.control_app import ControlApp as control_app
 
 IP = '0.0.0.0'  # IP for all available network interfaces in current machine
 PORT = 12345
@@ -21,6 +22,7 @@ def create_and_send_response(request_str, client_socket):
     if request_str:   # if request_str != "" and request_str != None. Socket get "" after disconnection
         print(request_str)
         if request_str == "start":
+            control_app.start()
             response_str = "ack-start"
         if request_str == "configure":
 
@@ -75,7 +77,7 @@ def conversation(client_socket, client_address):
     print("Client close the connection. Client ip  =", ip, ", client port =", port)
 
 
-def main():
+def startCommu():
     global file_size
     global current_size
     # Set up the server:
@@ -107,7 +109,3 @@ def main():
     finally:
         print('server socket closed')
         server_socket.close()
-
-
-if __name__ == '__main__':
-    main()

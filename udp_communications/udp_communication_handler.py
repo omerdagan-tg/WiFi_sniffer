@@ -1,6 +1,7 @@
 from socket import *
 import json
-from udp_data_utilization import *
+from udp_communications.udp_data_utilization import *
+import time
 
 
 class UDPCommunication:
@@ -43,3 +44,9 @@ class UDPCommunication:
             handle_data(data)
         s.close()
 
+    #sends a file every number of seconds (provided by arguments)
+    def send_with_timer(self, file_name, sec):
+        while True:
+            time.sleep(sec)
+            self.send(file_name)
+            os.remove(file_name)
