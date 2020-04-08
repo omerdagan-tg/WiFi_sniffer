@@ -9,15 +9,15 @@ import threading
 
 class ControlApp:
     def __init__(self):
-        packetLocation = Tshark.getPacketLocation()
-        rpiConfigurationParser = RPiConfigParser(packet_location=packetLocation, ini_location= 'settings.ini')
-        monitor = WifiMonitoringProgram()
-        TCPserver = threading.Thread(target=tcpServer.startCommu, args=())
-        UDPclient = udpClient("192.168.1.1", 12000)
-        UDPclientThread = threading.Thread(target=UDPclient.send_with_timer, args=(packetLocation, 5))
+        self.packetLocation = Tshark.getPacketLocation()
+        self.rpiConfigurationParser = RPiConfigParser(packet_location=self.packetLocation, ini_location= 'settings.ini')
+        self.monitor = WifiMonitoringProgram()
+        self.TCPserver = threading.Thread(target=tcpServer.startCommu, args=())
+        self.UDPclient = udpClient("192.168.1.1", 12000)
+        self.UDPclientThread = threading.Thread(target=self.UDPclient.send_with_timer, args=(self.packetLocation, 5))
 
         try:
-            TCPserver.start()
+            self.TCPserver.start()
 
         except:
             print ("Error: unable to start tcp server thread")
@@ -32,9 +32,40 @@ class ControlApp:
             print("Error: unable to start monitor mode")
 
         try:
+            Tshark.startMonitoring()
+
+        except:
+            print("Error: unable to start monitoring")
+
+        try:
             self.UDPclientThread.start()
 
         except:
             print("Error: unable to start udp client thread")
 
 
+
+    def pause(self):
+        try:
+            Tshark.stopMonitorMode()
+        except:
+            print("Error: unable to stop monitor mode")
+
+
+    def stop(self):
+        try:
+            self.monitor.stopMonitorMode()
+        except:
+            print("Error: unable to stop monitor mode")
+
+        try:
+            Tshark.stopMonitoring()
+
+        except:
+            print("Error: unable to stop monitoring")
+
+        try:
+            self.UDPclientThread._stop()
+
+        except:
+            print("Error: unable to stop udp client thread")
