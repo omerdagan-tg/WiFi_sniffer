@@ -50,6 +50,14 @@ class ControlApp:
             print("Error: unable to stop monitor mode")
 
 
+    def unpause(self):
+        try:
+            Tshark.startMonitoring()
+            print("unpausing monitor mode")
+        except:
+            print("Error: unable to start monitor mode")
+
+
     def stop(self):
         try:
             self.monitor.stopMonitorMode()
