@@ -1,7 +1,6 @@
 import WMP.RPi_configuration_parser as RPiConfigParser
 import WMP.Tshark as Tshark
 from WMP.WifiMonitoringProgram import WifiMonitoringProgram
-import tcp_communications.server.server as tcpServer
 from udp_communications.udp_communication_handler import UDPCommunication as udpClient
 from WMP.RPi_configuration_parser import RpiConfigurationParser as RPiConfigParser
 from WMP.Tshark import Tshark
@@ -12,15 +11,10 @@ class ControlApp:
         self.packetLocation = Tshark.getPacketLocation()
         self.rpiConfigurationParser = RPiConfigParser(packet_location=self.packetLocation, ini_location= 'settings.ini')
         self.monitor = WifiMonitoringProgram()
-        self.TCPserver = threading.Thread(target=tcpServer.startCommu, args=())
         self.UDPclient = udpClient("192.168.1.1", 12000)
         self.UDPclientThread = threading.Thread(target=self.UDPclient.send_with_timer, args=(self.packetLocation, 5))
+        self.start()
 
-        try:
-            self.TCPserver.start()
-
-        except:
-            print ("Error: unable to start tcp server thread")
 
 
 
@@ -28,17 +22,20 @@ class ControlApp:
 
         try:
             self.monitor.startMonitorMode()
+            print("starting monitor mode")
         except:
             print("Error: unable to start monitor mode")
 
         try:
             Tshark.startMonitoring()
+            print("starting monitoring")
 
         except:
             print("Error: unable to start monitoring")
 
         try:
             self.UDPclientThread.start()
+            print("starting UDP")
 
         except:
             print("Error: unable to start udp client thread")
@@ -48,6 +45,7 @@ class ControlApp:
     def pause(self):
         try:
             Tshark.stopMonitorMode()
+            print("pausing monitor mode")
         except:
             print("Error: unable to stop monitor mode")
 
@@ -55,11 +53,13 @@ class ControlApp:
     def stop(self):
         try:
             self.monitor.stopMonitorMode()
+            print("stopping monitor mode")
         except:
             print("Error: unable to stop monitor mode")
 
         try:
             Tshark.stopMonitoring()
+            print("stopping monitor mode")
 
         except:
             print("Error: unable to stop monitoring")

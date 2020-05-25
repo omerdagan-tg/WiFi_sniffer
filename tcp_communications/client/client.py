@@ -16,7 +16,7 @@ def updateConfiguration():
 def main():
     global client_request_str
     """implements the conversation with server"""
-    # Open client socket, Transport layer: protocol TCP, Network layer: protocol IP
+    # Open client socket, Transport layer: my_protocol.py TCP, Network layer: my_protocol.py IP
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((HOST_IP, PORT))
     ini_file_size = os.path.getsize("configuration.ini")
@@ -33,7 +33,7 @@ def main():
                         while data:
                             client_socket.send(data)
                             data = fs.read(1024)
-                # send request according to the protocol
+                # send request according to the my_protocol.py
                 protocol.send_request(client_socket, client_request_str)
                 # Get response from server
                 response = protocol.get_response(client_socket)

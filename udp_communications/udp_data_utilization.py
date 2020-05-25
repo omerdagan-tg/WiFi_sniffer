@@ -1,6 +1,6 @@
 from socket import *
 import json
-from file_handler import FileHandler
+import udp_communications.file_handler as FileHandler
 
 
 class DataUtilization:

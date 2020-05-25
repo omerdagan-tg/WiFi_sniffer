@@ -1,8 +1,7 @@
 # Basic server
 import socket
 import threading
-import tcp_communications.server.protocol as protocol
-from WMP.control_app import ControlApp as control_app
+import my_protocol
 
 IP = '0.0.0.0'  # IP for all available network interfaces in current machine
 PORT = 12345
@@ -13,7 +12,7 @@ global current_size
 
 def create_and_send_response(request_str, client_socket):
     """Receive the client message as parameter, create
-    and return the response according to the protocol.
+    and return the response according to the my_protocol.py.
     Available commands: [Name]/.../[Exit]
     """
     response_str = ""
@@ -22,7 +21,7 @@ def create_and_send_response(request_str, client_socket):
     if request_str:   # if request_str != "" and request_str != None. Socket get "" after disconnection
         print(request_str)
         if request_str == "start":
-            control_app.start()
+            controlAppStart()
             response_str = "ack-start"
         if request_str == "configure":
 
@@ -50,7 +49,7 @@ def create_and_send_response(request_str, client_socket):
         else:
             response_str = "Not valid command"
 
-        protocol.send_response(client_socket, response_str)
+        my_protocol.send_response(client_socket, response_str)
 
     return request_str and response_str != "Bye!"
 
@@ -67,7 +66,7 @@ def conversation(client_socket, client_address):
         while ack:
 
             # create and send the response
-            request = protocol.get_request(client_socket)
+            request = my_protocol.get_request(client_socket)
             print("client sent:", request)
             ack = create_and_send_response(request, client_socket)
 
@@ -82,7 +81,7 @@ def startCommu():
     global current_size
     # Set up the server:
     # create an INET, STREAMing socket
-    # (IP v4 protocol in Network(Internet) Layer and TCP protocol in Transport Layer)
+    # (IP v4 my_protocol.py in Network(Internet) Layer and TCP my_protocol.py in Transport Layer)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # When you create a socket, you don't really own it. The OS (TCP stack) creates it for you and gives you
@@ -109,3 +108,7 @@ def startCommu():
     finally:
         print('server socket closed')
         server_socket.close()
+
+
+def __ini__():
+    startCommu()
